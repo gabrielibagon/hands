@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/addons/p5.dom.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>  
+
+<script>
+	images = []
+	
+	function pad(num, size){ return ; }
+
+	function preload(){
+		var pad = 7
+		var str = loadStrings('HandInfo.txt', processMetadata)
+	}
+	function processMetadata(str){
+		for (var i=0;i<250;i++){
+			num = Math.floor(Math.random() * str.length);
+
+			filename = str[num].split(',')[7]
+			img = loadImage("scaled/" + filename); 
+			images.push(img)
+		}
+
+	}
+
+	function setup(){
+		frameRate(10)
+  		createCanvas(windowWidth-50, windowHeight);
+
+	}
+
+	function draw(){
+		var img;
+		var col = 0;
+		var row = 0;
+		numPerCol = 20
+		colWidth = windowWidth / numPerCol;
+
+		for (var i=0;i<images.length;i++){
+			num = Math.floor(Math.random() * images.length);
+			img = images[num]
+			width = colWidth
+			height = img.height*(colWidth / img.height)
+			x = i*width
+			y = i*height
+			push()
+			image(img, width*col-15, height*row-15,width,height);
+			pop()
+			col+=1
+			if (i > 0 && i %20 ===0){
+				row+=1
+				col=0
+			}
+
+		}
+
+
+
+	}
+
+    </script>
+  </head>
+<body oncontextmenu="return false;">
+  </body>
+</html>

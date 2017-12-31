@@ -1,0 +1,138 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/addons/p5.dom.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>  
+
+<script>
+	var dorsal_right = []
+	var palmar_right = []
+	var dorsal_left = []
+	var palmar_left = []
+
+	var numImages = 180
+
+	
+
+	function pad(num, size){ return ; }
+
+	function preload(){
+		var pad = 7
+		var str = loadStrings('HandInfo.txt', processMetadata)
+	}
+	function processMetadata(str){
+		while ((dorsal_right.length <= numImages) ||
+				(palmar_right.length <= numImages) ||
+				(dorsal_left.length <= numImages) ||
+				(palmar_left.length <= numImages)
+		){
+			num = Math.floor(Math.random() * str.length) + 1;
+
+			filename = str[num].split(',')[7]
+			aspect = str[num].split(',')[6]
+			img = loadImage("scaled/" + filename); 
+			if (aspect == 'dorsal right' && dorsal_right.length <= numImages){
+				dorsal_right.push(img)
+			}else if(aspect == 'palmar right' && palmar_right.length <= numImages){
+				palmar_right.push(img)
+			}else if(aspect == 'dorsal left' && dorsal_left.length <= numImages){
+				dorsal_left.push(img)
+			}else if(aspect == 'palmar left' && palmar_left.length <= numImages){
+				palmar_left.push(img)
+			}	
+		}
+		console.log(dorsal_right.length)
+		console.log(palmar_right.length)
+		console.log(dorsal_left.length)
+		console.log(palmar_left.length)
+
+
+	}
+
+	function setup(){
+		frameRate(10)
+  		createCanvas(windowWidth-50, windowHeight);
+  		RIGHT = true
+  		DORSAL = true
+  		LEFT = false
+  		PALMAR = false
+
+
+	}
+
+	function resized(){
+		reiszeCanvas(windowWidth-50, windowHeight);
+
+
+	}
+
+	function draw(){
+		clear()
+
+
+  		var img;
+		var col = 0;
+		var row = 0;
+		numPerCol = 15
+		colWidth = windowWidth / numPerCol;
+
+  		for (var i=0;i<numImages;i++){
+			// num = Math.floor(Math.random() * numImages) - 1;
+			num = i
+
+			dorsalRightImg = dorsal_right[num]
+			palmarRightImg = palmar_right[num]
+			dorsalLeftImg = dorsal_left[num]
+			palmarLeftImg = palmar_left[num]
+
+			width = colWidth
+			height = colWidth
+			x = width*col-15
+			y = height*row-15
+
+			if ((mouseX > x) && 
+				(mouseX < x + width) && 
+				(mouseY > y) && 
+				(mouseY < y + height) ){
+				DORSAL = false
+				PALMAR = true
+			}else{
+				DORSAL = true
+				PALMAR = false
+			}
+
+			if (RIGHT && DORSAL){
+				image(dorsalRightImg, x, y,width,height);
+			}else if (RIGHT & PALMAR){
+				image(palmarRightImg, x, y,width,height);
+			}else if (LEFT & DORSAL){
+				image(dorsalLeftImg, x, y,width,height);
+			}else if (LEFT & PALMAR){
+				image(palmarLeftImg, x, y,width,height);
+			}			
+			col+=1
+			if (i > 0 && i %20 ===0){
+				row+=1
+				col=0
+			}
+
+		}
+	}
+
+	function mouseClicked(){
+		if (RIGHT){
+			RIGHT=false
+			LEFT = true
+		}else{
+			RIGHT = true;
+			LEFT = false
+		}
+	}
+
+
+
+    </script>
+  </head>
+<body oncontextmenu="return false;">
+  </body>
+</html>
